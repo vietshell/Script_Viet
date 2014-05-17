@@ -13,7 +13,10 @@ exit
 fi
 abc=`rpm -qa | grep httpd`
 intef=`route -n | awk ' / UG / {print $8}'`
+if [ "$abc" != "" ]; then
 yum -y remove $abc
+fi
+yum -y install ipvsadm
 yum -y install httpd httpd-* wget lsof mlocate
 yum -y install gcc kernel-headers kernel-devel openssl-devel
 wget http://www.keepalived.org/software/keepalived-1.2.13.tar.gz
