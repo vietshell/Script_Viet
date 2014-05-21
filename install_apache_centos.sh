@@ -5,6 +5,7 @@
 #
 #  Created by HSP SI Viet Nam on 5/16/14.
 #
+clear
 tf=`echo $0`
 if [ $(id -u) != "0"]; then
 printf "Error: Ban khong phai la supper admin!\n"
@@ -27,7 +28,9 @@ clear
 echo "Success"
 #remove old mysql
 echo "Remove apache, php Old"
+if [ "$check_httpd_php" != "" ]; then
 yum -y remove $check_httpd_php
+fi
 clear
 echo "Install php apache"
 yum -y install httpd httpd-* php php-*

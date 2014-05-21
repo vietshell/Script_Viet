@@ -56,7 +56,7 @@ clear
 echo "Configure MySQL User Root"
 mysql -u root << eof
 GRANT USAGE ON *.* TO root@'%' IDENTIFIED BY '$dbpass';
-UPDATE mysql.user SET Password=PASSWORD('$dbpass') WHERE User='root';
+UPDATE mysql.user SET Password=PASSWORD('123456a@') WHERE User='root';
 delete from mysql.user where user='';
 GRANT ALL PRIVILEGES ON * . * TO  'root'@'%' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
 eof

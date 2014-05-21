@@ -9,6 +9,14 @@
 
 #Check Install packet
 clear
+clear
+tf=`echo $0`
+if [ $(id -u) != "0"]; then
+printf "Error: Ban khong phai la supper admin!\n"
+printf "Vui long dang nhap bang tai khoan supper admin de co the tien hanh cai dat!\n"
+sleep 3
+exit
+fi
 thumuc=`pwd`
 sed -i 's/SELINUX=enforing/SELINUX=disabled/g' /etc/selinux/config
 hsp_dir="/var/www/html/hsp_web"
@@ -176,7 +184,7 @@ clear
 echo "Restart HSPVN success"
 rsthspvn
 chmod +x /usr/bin/hspvnrestart
-
+chkconfig iptables off
 
 clear
 echo " Install Success Full"
