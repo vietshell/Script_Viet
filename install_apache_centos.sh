@@ -7,7 +7,7 @@
 #
 clear
 tf=`echo $0`
-if [ $(id -u) != "0"]; then
+if [ $(id -u) != "0" ]; then
 printf "Error: Ban khong phai la supper admin!\n"
 printf "Vui long dang nhap bang tai khoan supper admin de co the tien hanh cai dat!\n"
 sleep 3
@@ -57,6 +57,46 @@ cat > /etc/httpd/conf.d/1.conf << eof
     ServerName $ip_pub
 </VirtualHost>
 eof
+
+#Setting Iptables
+IPTABLES='/sbin/iptables'
+$IPTABLES -P INPUT ACCEPT
+$IPTABLES -P OUTPUT ACCEPT
+$IPTABLES -P FORWARD DROP
+$IPTABLES -t nat -P OUTPUT ACCEPT
+$IPTABLES -t nat -P POSTROUTING ACCEPT
+$IPTABLES -t nat -P PREROUTING ACCEPT
+$IPTABLES -t mangle -P INPUT ACCEPT
+$IPTABLES -t mangle -P OUTPUT ACCEPT
+$IPTABLES -t mangle -P FORWARD DROP
+$IPTABLES -t mangle -P POSTROUTING ACCEPT
+$IPTABLES -t mangle -P PREROUTING ACCEPT
+
+#clear rule old
+$IPTABLES -F
+$IPTABLES -X
+$IPTABLES -Z
+$IPTABLES -t nat -F
+$IPTABLES -t nat -X
+$IPTABLES -t nat -Z
+$IPTABLES -t mangle -F
+$IPTABLES -t mangle -X
+$IPTABLES -t mangle -Z
+
+#Add policy
+$IPTABLES -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+$IPTABLES -A INPUT -p icmp -j ACCEPT
+$IPTABLES -A INPUT -i lo -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 22 -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 80 -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 443 -j ACCEPT
+
+$IPTABLES -P INPUT DROP
+
+/etc/init.d/iptables save
+/etc/init.d/iptables restart
+chkconfig iptables on
+
 
 echo "Start Service"
 /etc/init.d/httpd restart
